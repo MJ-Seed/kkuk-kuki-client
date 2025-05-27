@@ -15,19 +15,15 @@ export default function QuokkaClicker({ onClick, count }: Props) {
   const defaultQuokkaRef = useRef<HTMLImageElement | null>(null)
   const smileQuokkaRef = useRef<HTMLImageElement | null>(null)
 
-  // 이미지 프리로딩 처리
   useEffect(() => {
-    // 기본 쿼카 이미지 프리로드
     const defaultImg = new Image()
     defaultImg.src = defaultQuokka
     defaultQuokkaRef.current = defaultImg
     
-    // 스마일 쿼카 이미지 프리로드
     const smileImg = new Image()
     smileImg.src = smileQuokka
     smileQuokkaRef.current = smileImg
     
-    // 두 이미지가 모두 로드되면 상태 업데이트
     Promise.all([
       new Promise(resolve => {
         defaultImg.onload = resolve
