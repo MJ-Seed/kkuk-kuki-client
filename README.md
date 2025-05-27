@@ -1,6 +1,6 @@
 # 꾹꾹이 (Kkuk-Kuki)
 
-![꾹꾹이 로고](src/assets/quokka-smile.png)
+![꾹꾹이 로고](public/images/quokka-smile.ico)
 
 ## 귀여운 쿼카를 클릭하는 중독성 있는 클리커 게임
 
@@ -67,7 +67,7 @@ npm run build
 
 ## 📱 스크린샷
 
-![게임 화면](public/screenshot.png)
+![게임 화면](public/images/screenshot1.png)
 
 ## 📄 라이센스
 
