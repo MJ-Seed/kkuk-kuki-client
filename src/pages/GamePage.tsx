@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import QuokkaClicker from '../components/QuokkaClicker'
-import Leaderboard     from '../components/Leaderboard'
+import Leaderboard from '../components/Leaderboard'
+// import { sendClick, getLeaderboard, setupWebSocket, Leader } from '../services/api'
 
 type Leader = { nickname: string; clicks: number }
 
@@ -10,6 +11,12 @@ interface Props {
 
 export default function GamePage({ nickname }: Props) {
   const [clickCount, setClickCount] = useState(0)
+  // Spring Boot 백엔드 연동 시 사용할 상태 변수들
+  /*
+  const [isOnline, setIsOnline] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const wsRef = useRef<WebSocket | null>(null)
+  */
 
   const [leaders, setLeaders] = useState<Leader[]>(() => {
     const quokkaNames = [
@@ -59,10 +66,55 @@ export default function GamePage({ nickname }: Props) {
     });
   })
 
-  const handleClick = useCallback(() => {
-    setClickCount((c) => c + 1)
-  }, [])
+  // Spring Boot 백엔드 연결 확인 및 초기 데이터 로드
+  /*
+  useEffect(() => {
+    const checkConnection = async () => {
+      try {
+        setIsLoading(true)
+        // 서버에서 리더보드 데이터 가져오기 시도
+        const serverLeaders = await getLeaderboard()
+        
+        if (serverLeaders.length > 0) {
+          setLeaders(serverLeaders)
+          setIsOnline(true)
+          console.log('Connected to backend server')
+        } else {
+          setIsOnline(false)
+          console.log('Using offline mode with mock data')
+        }
+      } catch (error) {
+        console.error('Failed to connect to backend:', error)
+        setIsOnline(false)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
+    checkConnection()
+  }, [])
+  */
+
+  // WebSocket 연결 설정 (실시간 업데이트)
+  /*
+  useEffect(() => {
+    if (isOnline) {
+      // WebSocket 연결 설정
+      wsRef.current = setupWebSocket(nickname, (updatedLeaders) => {
+        setLeaders(updatedLeaders)
+      })
+
+      // 컴포넌트 언마운트 시 WebSocket 연결 종료
+      return () => {
+        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+          wsRef.current.close()
+        }
+      }
+    }
+  }, [isOnline, nickname])
+  */
+
+  // 현재는 로컬에서 리더보드 업데이트 (백엔드 연동 시 수정 예정)
   useEffect(() => {
     const iv = setInterval(() => {
       setLeaders((prev) => {
@@ -85,6 +137,21 @@ export default function GamePage({ nickname }: Props) {
     return () => clearInterval(iv);
   }, []);
 
+  // 클릭 이벤트 핸들러 (백엔드 연동 시 수정 예정)
+  const handleClick = useCallback(() => {
+    setClickCount((c) => c + 1)
+    
+    // 백엔드에 클릭 이벤트 전송
+    /*
+    if (isOnline) {
+      sendClick(nickname, clickCount + 1).catch(error => {
+        console.error('Failed to send click to server:', error)
+      })
+    }
+    // 의존성 배열에 clickCount 추가해줘야 함
+    */
+  }, [])
+
   const visibleLeaders = useMemo(() => {
     const all = [...leaders, { nickname, clicks: clickCount }];
     return all;
@@ -96,6 +163,14 @@ export default function GamePage({ nickname }: Props) {
         <h1 className="text-3xl sm:text-4xl font-bold text-[var(--color-accent)] mb-1 animate-pulse">꾹꾹이</h1>
         <div className="h-1 w-12 sm:w-16 bg-[var(--color-accent)] mx-auto rounded-full mb-1 sm:mb-2"></div>
         <h2 className="text-lg sm:text-xl font-medium">안녕하세요, <span className="text-[var(--color-accent-dark)] font-bold">{nickname}</span>님!</h2>
+        {/* 서버 연결 상태 표시
+        {isOnline && (
+          <div className="mt-1 flex items-center justify-center">
+            <span className="inline-flex h-2 w-2 rounded-full bg-green-500 mr-1"></span>
+            <span className="text-xs text-green-600 font-medium">서버 연결됨</span>
+          </div>
+        )}
+        */}
       </div>
       
       <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-3 sm:gap-4 md:gap-6 flex-1 overflow-hidden">
@@ -111,6 +186,14 @@ export default function GamePage({ nickname }: Props) {
       
       <div className="mt-3 sm:mt-4 text-center text-xs sm:text-sm text-[var(--color-accent)] opacity-70">
         <p>꾹꾹이를 클릭해서 점수를 올려보세요! 구간별 순위도 확인해주세요!</p>
+        {/* 오프라인 모드 표시
+        {!isOnline && (
+          <p className="mt-1 text-amber-500">
+            <span className="inline-flex h-2 w-2 rounded-full bg-amber-500 mr-1"></span>
+            오프라인 모드: 서버에 연결되지 않았습니다
+          </p>
+        )}
+        */}
       </div>
     </div>
   )
