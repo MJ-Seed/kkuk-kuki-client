@@ -38,19 +38,19 @@ export default function QuokkaClicker({ onClick, count }: Props) {
 
   return (
     <div className="flex flex-col items-center select-none w-full">
-      <div className="text-center mb-2">
-        <span className="text-2xl font-bold text-[var(--color-accent-dark)] tabular-nums transition-all-smooth">
+      <div className="text-center mb-2 sm:mb-3">
+        <span className="text-xl sm:text-2xl font-bold text-[var(--color-accent-dark)] tabular-nums transition-all-smooth">
           {count.toLocaleString()}
         </span>
         <p className="text-xs text-[var(--color-accent)] mt-0.5">클릭 점수</p>
       </div>
       
       <div
-        className="w-52 h-52 rounded-full overflow-hidden cursor-pointer relative transition-all-smooth"
+        className="w-40 h-40 sm:w-48 sm:h-48 md:w-52 md:h-52 rounded-full overflow-hidden cursor-pointer relative transition-all-smooth active:scale-95"
         style={{
           boxShadow: pressed 
-            ? '0 5px 10px rgba(161, 134, 116, 0.2)' 
-            : '0 10px 20px rgba(161, 134, 116, 0.3), 0 5px 10px rgba(161, 134, 116, 0.2)'
+            ? '0 3px 6px rgba(161, 134, 116, 0.15)' 
+            : '0 8px 16px rgba(161, 134, 116, 0.25), 0 4px 8px rgba(161, 134, 116, 0.15)'
         }}
         onMouseDown={handleDown}
         onMouseUp={handleUp}
@@ -59,16 +59,18 @@ export default function QuokkaClicker({ onClick, count }: Props) {
         onTouchEnd={handleUp}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-beige-200)] to-transparent opacity-40 z-10"></div>
+        <div className="absolute inset-0 bg-[var(--color-accent)]/10 opacity-0 hover:opacity-30 z-10 transition-opacity"></div>
         <img
           src={pressed ? smileQuokka : defaultQuokka}
           alt="쿼카"
           className="w-full h-full object-cover transition-all-smooth"
           style={{ transform: pressed ? 'scale(1.05)' : 'scale(1)' }}
+          draggable="false"
         />
       </div>
       
-      <div className="mt-3 text-center">
-        <div className="inline-block px-3 py-1 bg-[var(--color-beige-200)] rounded-full text-xs font-medium text-[var(--color-accent-dark)]">
+      <div className="mt-2 sm:mt-3 text-center">
+        <div className="inline-block px-3 py-1 bg-[var(--color-beige-200)] rounded-full text-xs font-medium text-[var(--color-accent-dark)] shadow-sm">
           꾹꾹이를 클릭해주세요!
         </div>
       </div>

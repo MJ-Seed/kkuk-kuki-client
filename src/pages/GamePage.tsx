@@ -75,25 +75,25 @@ export default function GamePage({ nickname }: Props) {
   }, [leaders, nickname, clickCount])
 
   return (
-    <div className="h-screen flex flex-col items-center p-15 animate-fade-in-down overflow-hidden">
-      <div className="mb-1 text-center">
-        <h1 className="text-4xl font-bold text-[var(--color-accent)] mb-1 animate-pulse">꾹꾹이</h1>
-        <div className="h-1 w-16 bg-[var(--color-accent)] mx-auto rounded-full mb-1"></div>
-        <h2 className="text-xl font-medium">안녕하세요, <span className="text-[var(--color-accent-dark)] font-bold">{nickname}</span>님!</h2>
+    <div className="min-h-screen flex flex-col items-center px-3 py-4 sm:p-6 animate-fade-in-down overflow-hidden bg-[var(--color-beige-100)]/30">
+      <div className="mb-2 sm:mb-3 text-center">
+        <h1 className="text-3xl sm:text-4xl font-bold text-[var(--color-accent)] mb-1 animate-pulse">꾹꾹이</h1>
+        <div className="h-1 w-12 sm:w-16 bg-[var(--color-accent)] mx-auto rounded-full mb-1 sm:mb-2"></div>
+        <h2 className="text-lg sm:text-xl font-medium">안녕하세요, <span className="text-[var(--color-accent-dark)] font-bold">{nickname}</span>님!</h2>
       </div>
       
-      <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-4 md:gap-6 flex-1 overflow-hidden">
-        <div className="flex-1 flex justify-center">
-          <div className="card-beige p-4 w-full max-w-md">
+      <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-3 sm:gap-4 md:gap-6 flex-1 overflow-hidden">
+        <div className="w-full md:flex-1 flex justify-center mb-3 md:mb-0">
+          <div className="card-beige p-3 sm:p-4 w-full max-w-md shadow-md">
             <QuokkaClicker count={clickCount} onClick={handleClick} />
           </div>
         </div>
-        <div className="flex-1 flex justify-center">
+        <div className="w-full md:flex-1 flex justify-center">
           <Leaderboard leaders={visibleLeaders} myNickname={nickname} />
         </div>
       </div>
       
-      <div className="mt-2 text-center text-xs text-[var(--color-accent)] opacity-70">
+      <div className="mt-3 sm:mt-4 text-center text-xs sm:text-sm text-[var(--color-accent)] opacity-70">
         <p>꾹꾹이를 클릭해서 점수를 올려보세요! 구간별 순위도 확인해주세요!</p>
       </div>
     </div>
