@@ -84,7 +84,7 @@ export default function Leaderboard({ leaders, myNickname }: Props) {
       
       <div className="bg-[var(--color-beige-100)] rounded-md p-1 mb-2 shadow-sm">
         <div className="flex justify-between items-center px-2 py-1 text-xs font-medium text-[var(--color-accent-dark)]">
-          <span className="w-7 sm:w-8 text-center">순위</span>
+          <span className="w-5 sm:w-5 text-center">순위</span>
           <span className="flex-1 ml-1 sm:ml-2">닉네임</span>
           <span>점수</span>
         </div>
