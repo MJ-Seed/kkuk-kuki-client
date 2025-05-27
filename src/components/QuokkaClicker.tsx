@@ -10,9 +10,37 @@ interface Props {
 export default function QuokkaClicker({ onClick, count }: Props) {
   const [pressed, setPressed] = useState(false)
   const [isClicking, setIsClicking] = useState(false)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
   const clickTimeoutRef = useRef<number | null>(null)
+  const defaultQuokkaRef = useRef<HTMLImageElement | null>(null)
+  const smileQuokkaRef = useRef<HTMLImageElement | null>(null)
 
+  // 이미지 프리로딩 처리
   useEffect(() => {
+    // 기본 쿼카 이미지 프리로드
+    const defaultImg = new Image()
+    defaultImg.src = defaultQuokka
+    defaultQuokkaRef.current = defaultImg
+    
+    // 스마일 쿼카 이미지 프리로드
+    const smileImg = new Image()
+    smileImg.src = smileQuokka
+    smileQuokkaRef.current = smileImg
+    
+    // 두 이미지가 모두 로드되면 상태 업데이트
+    Promise.all([
+      new Promise(resolve => {
+        defaultImg.onload = resolve
+        if (defaultImg.complete) resolve(null)
+      }),
+      new Promise(resolve => {
+        smileImg.onload = resolve
+        if (smileImg.complete) resolve(null)
+      })
+    ]).then(() => {
+      setImagesLoaded(true)
+    })
+
     return () => {
       if (clickTimeoutRef.current !== null) {
         window.clearTimeout(clickTimeoutRef.current)
@@ -63,10 +91,15 @@ export default function QuokkaClicker({ onClick, count }: Props) {
         <img
           src={pressed ? smileQuokka : defaultQuokka}
           alt="쿼카"
-          className="w-full h-full object-cover transition-all-smooth"
+          className={`w-full h-full object-cover transition-all-smooth ${imagesLoaded ? '' : 'opacity-0'}`}
           style={{ transform: pressed ? 'scale(1.05)' : 'scale(1)' }}
           draggable="false"
         />
+        {!imagesLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-[var(--color-beige-100)]">
+            <div className="w-10 h-10 border-4 border-[var(--color-accent)] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
       </div>
       
       <div className="mt-2 sm:mt-3 text-center">
