@@ -30,8 +30,8 @@ export default function Leaderboard({ leaders, myNickname }: Props) {
   tierLeaders.sort((a, b) => b.clicks - a.clicks);
 
   const myRank = tierLeaders.findIndex(l => l.nickname === myNickname) + 1;
-  const otherLeaders = tierLeaders.filter(l => l.nickname !== myNickname);
-  const topOtherLeaders = otherLeaders.slice(0, 9);
+  // Include all leaders in the display list, including the user
+  const displayLeaders = tierLeaders.slice(0, 9);
   
   return (
     <div className="card-beige p-3 sm:p-4 w-full max-w-md shadow-md">
@@ -91,26 +91,37 @@ export default function Leaderboard({ leaders, myNickname }: Props) {
       </div>
       
       <ul className="space-y-1 max-h-[160px] sm:max-h-[180px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-[var(--color-beige-300)] scrollbar-track-transparent">
-        {topOtherLeaders.map((l, i) => {
+        {displayLeaders.map((l, i) => {
           const leaderRank = tierLeaders.findIndex(tl => tl.nickname === l.nickname) + 1;
           const isTop3 = leaderRank <= 3;
+          const isMe = l.nickname === myNickname;
           
           return (
             <li
               key={i}
               className={`flex items-center px-2 py-1.5 sm:py-2 rounded-md transition-highlight ${
-                isTop3 
-                  ? 'bg-[var(--color-beige-200)] text-[var(--color-accent-dark)] shadow-sm'
-                  : 'bg-white'
+                isMe
+                  ? 'bg-[var(--color-highlight)] border-2 border-[var(--color-accent)] shadow-md'
+                  : isTop3 
+                    ? 'bg-[var(--color-beige-200)] text-[var(--color-accent-dark)] shadow-sm'
+                    : 'bg-white'
               }`}
             >
-              <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full ${isTop3 ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-beige-300)]'}`}>
-                <span className={`${isTop3 ? 'text-white' : 'text-[var(--color-accent-dark)]'} font-bold text-xs`}>{leaderRank}</span>
+              <div className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full ${
+                isMe 
+                  ? 'bg-[var(--color-accent)]'
+                  : isTop3 
+                    ? 'bg-[var(--color-accent)]' 
+                    : 'bg-[var(--color-beige-300)]'
+              }`}>
+                <span className={`${
+                  isMe || isTop3 ? 'text-white' : 'text-[var(--color-accent-dark)]'
+                } font-bold text-xs`}>{leaderRank}</span>
               </div>
               
-              <span className="flex-1 truncate text-xs sm:text-sm ml-1.5 sm:ml-2">{l.nickname}</span>
+              <span className={`flex-1 truncate text-xs sm:text-sm ml-1.5 sm:ml-2 ${isMe ? 'font-bold' : ''}`}>{l.nickname}</span>
               
-              <span className="tabular-nums font-semibold text-right text-xs sm:text-sm">
+              <span className={`tabular-nums font-semibold text-right text-xs sm:text-sm ${isMe ? 'font-bold' : ''}`}>
                 {l.clicks.toLocaleString()}
               </span>
             </li>

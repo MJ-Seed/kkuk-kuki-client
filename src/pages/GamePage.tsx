@@ -12,29 +12,50 @@ export default function GamePage({ nickname }: Props) {
   const [clickCount, setClickCount] = useState(0)
 
   const [leaders, setLeaders] = useState<Leader[]>(() => {
+    // Create a list of unique quokka names
     const quokkaNames = [
-      '기쁨쿼카', '운동쿼카', '잠못자쿼카', '연언쿼카', '사랑쿼카', 
+      '기쁨쿼카', '운동쿼카', '잠자쿼카', '연언쿼카', '사랑쿼카', 
       '마스터쿼카', '스마일쿼카', '신입쿼카', '어린쿼카', '여행쿼카',
       '새끼쿼카', '상상쿼카', '자유쿼카', '오렌지쿼카', '우주쿼카',
-      '잠못자쿼카', '장난쿼카', '재미쿼카', '전설쿼카', '행복쿼카',
-      '오지리쿼카', '오리지널쿼카', '상상쿼카', '신나는쿼카', '신선한쿼카',
-      '아기쿼카', '아이스쿼카', '아카데미쿼카', '안녕쿼카', '어른쿼카',
-      '얼음쿼카', '연습쿼카', '영웅쿼카', '오전쿼카', '오후쿼카',
-      '우산쿼카', '우주쿼카', '운동쿼카', '유머쿼카', '유니크쿼카',
-      '유학쿼카', '유행쿼카', '유우쿼카', '유우쿼카', '유우쿼카',
-      '유니크쿼카', '유니콘쿼카', '유니버스쿼카', '유니스타쿼카', '유니크쿼카',
+      '장난쿼카', '재미쿼카', '전설쿼카', '행복쿼카', '오지리쿼카', 
+      '오리지널쿼카', '신나는쿼카', '신선한쿼카', '아기쿼카', '아이스쿼카', 
+      '아카데미쿼카', '안녕쿼카', '어른쿼카', '얼음쿼카', '연습쿼카', 
+      '영웅쿼카', '오전쿼카', '오후쿼카', '우산쿼카', '유머쿼카', 
+      '유니크쿼카', '유학쿼카', '유행쿼카', '유우쿼카', '유니콘쿼카', 
+      '유니버스쿼카', '유니스타쿼카', '귀여운쿼카', '똑똑한쿼카', '멋진쿼카',
+      '용감한쿼카', '친절한쿼카', '활발한쿼카', '차분한쿼카', '예쁜쿼카',
+      '멋쟁이쿼카', '씩씩한쿼카', '당당한쿼카', '행운쿼카', '지혜쿼카',
+      '명예쿼카', '열정쿼카', '도전쿼카', '성공쿼카', '희망쿼카',
+      '꿈꾸는쿼카', '도약쿼카', '성장쿼카', '미래쿼카', '기적쿼카',
+      '환상쿼카', '마법쿼카', '신비쿼카', '모험쿼카', '탐험쿼카',
+      '발견쿼카', '창조쿼카', '발명쿼카', '혁신쿼카', '선구쿼카',
+      '선도쿼카', '선봉쿼카', '선두쿼카', '최고쿼카', '최상쿼카',
+      '최선쿼카', '최적쿼카', '최첨단쿼카', '최강쿼카', '최상위쿼카',
+      '일류쿼카', '일급쿼카', '일등쿼카', '일인자쿼카', '일당백쿼카',
+      '천하무적쿼카', '무적쿼카', '무한쿼카', '무궁쿼카', '무한대쿼카',
+      '영원쿼카', '영속쿼카', '영구쿼카', '영생쿼카', '영원한쿼카',
     ];
+
+    // Remove any duplicates from the quokkaNames array
+    const uniqueQuokkaNames = [...new Set(quokkaNames)];
+    
+    // Shuffle the array to get random order
+    const shuffledNames = [...uniqueQuokkaNames].sort(() => Math.random() - 0.5);
 
     return Array.from({ length: 100 }, (_, i) => {
       const tier = Math.floor(i / 20);
       const baseScore = tier * 1000;
       const randomOffset = Math.floor(Math.random() * 900);
       
-      const nameIndex = i % quokkaNames.length;
-      const uniqueNumber = Math.floor(i / quokkaNames.length) + 1;
-      const nickname = uniqueNumber > 1 
-        ? `${quokkaNames[nameIndex]}${uniqueNumber}` 
-        : quokkaNames[nameIndex];
+      // Ensure each nickname is unique by adding a number if needed
+      let nickname;
+      if (i < shuffledNames.length) {
+        nickname = shuffledNames[i];
+      } else {
+        const nameIndex = i % shuffledNames.length;
+        const uniqueNumber = Math.floor(i / shuffledNames.length) + 1;
+        nickname = `${shuffledNames[nameIndex]}${uniqueNumber}`;
+      }
       
       return {
         nickname,
