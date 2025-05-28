@@ -45,8 +45,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    # Removing environment section as it's causing validation errors
-    # GitHub Pages deployment will still work without it
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
