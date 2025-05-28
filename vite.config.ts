@@ -22,4 +22,17 @@ export default defineConfig({
       clientPort: 5173,
     },
   },
+  // 빌드 설정 추가
+  build: {
+    // 상대 경로로 자산 참조
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        // 청크 파일 이름 패턴 설정
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
+      }
+    }
+  }
 })
