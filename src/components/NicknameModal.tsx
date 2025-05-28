@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import logoImage from '../assets/logo.svg';
 
 interface Props {
   existingNicknames: string[]
@@ -45,7 +46,7 @@ export default function NicknameModal({ existingNicknames, onStart }: Props) {
     >
       <div className="card-beige p-6 sm:p-8 w-[90%] max-w-sm sm:max-w-md text-center transition-all shadow-lg">
         <div className="mb-5 sm:mb-6">
-          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--color-accent)] mb-2 animate-pulse">꾹꾹이</h1>
+          <img src={logoImage} alt="꾹꾹이" className="h-6 sm:h-8 mb-3 sm:mb-4 mx-auto animate-pulse" />
           <div className="h-1 w-16 bg-[var(--color-accent)] mx-auto rounded-full mb-3 sm:mb-4"></div>
           <h2 className="text-lg sm:text-xl font-medium text-[var(--color-accent-dark)]">닉네임을 입력해주세요</h2>
         </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import QuokkaClicker from '../components/QuokkaClicker'
 import Leaderboard from '../components/Leaderboard'
+import logoImage from '../assets/logo.svg';
 // import { sendClick, getLeaderboard, setupWebSocket, Leader } from '../services/api'
 
 type Leader = { nickname: string; clicks: number }
@@ -160,10 +161,10 @@ export default function GamePage({ nickname }: Props) {
   return (
     <div className="min-h-screen flex flex-col items-center px-3 py-4 sm:p-6 animate-fade-in-down overflow-hidden bg-[var(--color-beige-100)]/30">
       <div className="mb-2 sm:mb-3 text-center">
-        <h1 className="text-3xl sm:text-4xl font-bold text-[var(--color-accent)] mb-1 animate-pulse">꾹꾹이</h1>
+        <img src={logoImage} alt="꾹꾹이" className="h-6 sm:h-8 mb-2 mx-auto animate-pulse" />
         <div className="h-1 w-12 sm:w-16 bg-[var(--color-accent)] mx-auto rounded-full mb-1 sm:mb-2"></div>
         <h2 className="text-lg sm:text-xl font-medium">안녕하세요, <span className="text-[var(--color-accent-dark)] font-bold">{nickname}</span>님!</h2>
-        {/* 서버 연결 상태 표시
+        {/* 서버 연결 상태 표시 
         {isOnline && (
           <div className="mt-1 flex items-center justify-center">
             <span className="inline-flex h-2 w-2 rounded-full bg-green-500 mr-1"></span>
