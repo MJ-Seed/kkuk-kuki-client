@@ -1,58 +1,39 @@
-const CACHE_NAME = 'kkuk-kuki-cache-v1';
+const VERSION = 'v2';
+const CACHE_NAME = `kkuk-kuki-cache-${VERSION}`;
 
-// 캐시할 파일 목록 - 기본 파일만 캐시
-const urlsToCache = [
-  './',
-  './index.html',
-  './manifest.json',
-  './favicon.png'
-];
+// 현재 SW scope (= /kkuk-kuki/)를 베이스 경로로 계산
+const BASE = self.registration.scope;   // 항상 슬래시로 끝남
 
-// 서비스 워커 설치 시 캐시 생성
-self.addEventListener('install', (event) => {
-  // 즉시 활성화
+const PRECACHE = [
+  '',                // BASE 자체
+  'index.html',
+  'manifest.json',
+  'favicon.png',
+  'assets/main.js',  // vite build 결과 – 해시를 없앴으니 예측 가능
+  'assets/vendor.js' // React 등 공통 번들
+].map((p) => BASE + p);
+
+self.addEventListener('install', (evt) => {
   self.skipWaiting();
-  
-  // 기본 파일만 캐시
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('캐시 생성 완료');
-        return cache.addAll(urlsToCache);
-      })
-      .catch(error => {
-        console.error('캐시 생성 실패:', error);
-      })
+  evt.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE))
   );
 });
 
-// 네트워크 요청 처리 - 가장 단순한 방식 사용
-self.addEventListener('fetch', (event) => {
-  // 네트워크 우선, 실패 시에만 캐시 사용
-  event.respondWith(
-    fetch(event.request)
-      .catch(() => {
-        return caches.match(event.request);
-      })
+self.addEventListener('fetch', (evt) => {
+  // 네트워크 우선, 실패 시 캐시
+  evt.respondWith(
+    fetch(evt.request).catch(() => caches.match(evt.request))
   );
 });
 
-// 이전 버전의 캐시 정리
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', (evt) => {
   self.clients.claim();
-  
-  const cacheWhitelist = [CACHE_NAME];
-  
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-          return null;
-        }).filter(Boolean)
-      );
-    })
+  evt.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(
+        keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
+      )
+    )
   );
 });
