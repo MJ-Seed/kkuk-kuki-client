@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 interface Props {
   existingNicknames: string[]
@@ -9,6 +9,18 @@ export default function NicknameModal({ existingNicknames, onStart }: Props) {
   const [name, setName] = useState('')
   const [error, setError] = useState('')
   const [leaving, setLeaving] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    // iOS PWA에서 포커스 문제 해결을 위한 딜레이 추가
+    const timer = setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus()
+      }
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     if (leaving) {
@@ -37,6 +49,22 @@ export default function NicknameModal({ existingNicknames, onStart }: Props) {
     setLeaving(true)
   }
 
+  // iOS 포커스 문제를 해결하기 위한 핸들러
+  const handleInputFocus = () => {
+    // iOS에서 입력 필드에 포커스가 제대로 되지 않는 문제 해결
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      // iOS에서는 필드를 잠시 비활성화했다가 다시 활성화
+      if (inputRef.current) {
+        inputRef.current.blur()
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus()
+          }
+        }, 100)
+      }
+    }
+  }
+
   return (
     <div
       className={`fixed inset-0 bg-[var(--color-beige-100)]/90 backdrop-blur-md flex items-center justify-center ${
@@ -53,14 +81,15 @@ export default function NicknameModal({ existingNicknames, onStart }: Props) {
         <div className="mb-5 sm:mb-6">
           <div className="relative">
             <input
+              ref={inputRef}
               className={`w-full p-3 sm:p-4 pl-4 pr-10 border-2 rounded-lg bg-white/80 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] transition-all ${
                 error ? 'border-[var(--color-error)]' : 'border-[var(--color-beige-300)]'
               } text-base`}
               placeholder="2~10자"
               value={name}
               onChange={handleChange}
+              onFocus={handleInputFocus}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-              autoFocus
             />
             {name && (
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs font-medium text-[var(--color-accent)]">
