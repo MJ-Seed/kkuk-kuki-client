@@ -22,16 +22,16 @@ export default defineConfig({
       clientPort: 5173,
     },
   },
-  // 빌드 설정 추가
+  // 빌드 설정 - 해시 없는 파일명으로 변경
   build: {
     // 상대 경로로 자산 참조
     assetsDir: 'assets',
     rollupOptions: {
       output: {
-        // 청크 파일 이름 패턴 설정
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        // 청크 파일 이름 패턴 설정 - 해시 제거
+        chunkFileNames: 'assets/[name].js',
+        entryFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name].[ext]'
       }
     }
   }
